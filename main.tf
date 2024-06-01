@@ -74,3 +74,12 @@ resource "aws_route_table_association" "private_rta" {
   subnet_id      = aws_subnet.private_subnet[count.index].id
   route_table_id = aws_route_table.private_rt.id
 }
+
+resource "aws_db_subnet_group" "main" {
+  name       = "main-subnet-group"
+  subnet_ids = [for subnet in aws_subnet.private_subnet : subnet.id]
+
+  tags = {
+    Name = "Main DB Subnet Group"
+  }
+}

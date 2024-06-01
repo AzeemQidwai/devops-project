@@ -36,6 +36,6 @@ output "my_bastion_public_ip" {
   value = aws_instance.my-bastion.public_ip
 }
 
-output "private_ec2_instance_public_ips" {
-  value = [for instance in aws_instance.ec2_instance_private : instance.public_ip]
+output "mysql_db_endpoint" {
+  value = aws_db_instance.mysql_db.endpoint
 }

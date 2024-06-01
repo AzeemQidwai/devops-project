@@ -148,3 +148,77 @@ variable "custom_port" {
   type = number
   default     = 4000
 }
+
+variable "mysql_port" {
+  description = "MySQL port number"
+  type = number
+  default     = 3306
+}
+
+
+############################################################################################
+#                                                                                          #
+#                                      DB VARIABLES                                        #
+#                                                                                          #
+############################################################################################
+
+variable "db_identifier" {
+  description = "The identifier for the RDS instance"
+  type        = string
+  default     = "mysql-instance"
+}
+
+variable "db_engine" {
+  description = "The database engine to use"
+  type        = string
+  default     = "mysql"
+}
+
+variable "db_engine_version" {
+  description = "The database engine version to use"
+  type        = string
+  default     = "8.0.36"
+}
+
+variable "db_instance_class" {
+  description = "The instance class to use"
+  type        = string
+  default     = "db.t3.micro"
+}
+
+variable "db_storage_type" {
+  description = "The storage type to use"
+  type        = string
+  default     = "gp2"
+}
+
+variable "db_allocated_storage" {
+  description = "The allocated storage size in gigabytes"
+  type        = number
+  default     = 20
+}
+
+variable "db_name" {
+  description = "The name of the database to create"
+  type        = string
+  default     = "db_mysql"
+}
+
+variable "db_username" {
+  description = "The username for the database"
+  type        = string
+  default     = "admin"
+}
+
+variable "db_password" {
+  description = "The password for the database"
+  type        = string
+  default     = "password"
+  sensitive   = true
+}
+
+variable "skip_final_snapshot" {
+  description = "Whether to skip the final snapshot before deletion"
+  type        = bool
+  default     = true
+}
