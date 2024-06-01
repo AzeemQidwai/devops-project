@@ -5,7 +5,6 @@
 #                                      VPC VARIABLES                                       #
 #                                                                                          #
 ############################################################################################
-
 variable "aws_region" {
   description = "The AWS region to deploy resources in"
   type        = string
@@ -68,10 +67,18 @@ variable "nat_gw_tags" {
   }
 }
 
-variable "route_table_tags" {
-  description = "Tags to apply to the route tables"
+variable "public_route_table_tags" {
+  description = "Tags to apply to the public route table"
   type        = map(string)
   default = {
-    Name = "my-route-table"
+    Name = "my-public-route-table"
+  }
+}
+
+variable "private_route_table_tags" {
+  description = "Tags to apply to the private route table"
+  type        = map(string)
+  default = {
+    Name = "my-private-route-table"
   }
 }

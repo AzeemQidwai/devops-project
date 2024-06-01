@@ -11,7 +11,7 @@ resource "aws_subnet" "public_subnet" {
   cidr_block        = var.public_subnet_cidrs[count.index]
   availability_zone = var.availability_zones[count.index]
 
-  tags = var.subnet_tags
+  tags = merge(var.subnet_tags, { Name = "${var.subnet_tags.Name}-public-${var.availability_zones[count.index]}" })
 }
 
 resource "aws_subnet" "private_subnet" {
@@ -20,7 +20,7 @@ resource "aws_subnet" "private_subnet" {
   cidr_block        = var.private_subnet_cidrs[count.index]
   availability_zone = var.availability_zones[count.index]
 
-  tags = var.subnet_tags
+  tags = merge(var.subnet_tags, { Name = "${var.subnet_tags.Name}-private-${var.availability_zones[count.index]}" })
 }
 
 resource "aws_internet_gateway" "igw" {
@@ -38,6 +38,7 @@ resource "aws_nat_gateway" "nat" {
 
 resource "aws_eip" "nat" {
   domain = "vpc"
+
   tags = var.nat_gw_tags
 }
 
@@ -49,7 +50,7 @@ resource "aws_route_table" "public_rt" {
     gateway_id = aws_internet_gateway.igw.id
   }
 
-  tags = var.route_table_tags
+  tags = var.public_route_table_tags
 }
 
 resource "aws_route_table" "private_rt" {
@@ -60,7 +61,7 @@ resource "aws_route_table" "private_rt" {
     nat_gateway_id = aws_nat_gateway.nat.id
   }
 
-  tags = var.route_table_tags
+  tags = var.private_route_table_tags
 }
 
 resource "aws_route_table_association" "public_rta" {
