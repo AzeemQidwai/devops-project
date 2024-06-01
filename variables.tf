@@ -82,3 +82,69 @@ variable "private_route_table_tags" {
     Name = "my-private-route-table"
   }
 }
+
+############################################################################################
+#                                                                                          #
+#                                      EC2 VARIABLES                                       #
+#                                                                                          #
+############################################################################################
+
+variable "ec2_instance_names" {
+  description = "Names of EC2 instances"
+  type        = list(string)
+  default     = ["frontend", "backend", "metabase"]
+}
+
+variable "private_ec2_name" {
+  description = "Names of EC2 instances"
+  type        = string
+  default     = "my-bastion"
+}
+
+variable "ami_id" {
+  description = "AMI ID for EC2 instances"
+  type = string
+  default     = "ami-04b70fa74e45c3917"  # Replace with your desired AMI ID
+}
+
+variable "instance_type" {
+  description = "Instance type for EC2 instances"
+  type = string
+  default     = "t2.micro"       # Replace with your desired instance type
+}
+
+variable "key_name" {
+  description = "SSH key pair name for EC2 instances"
+  type = string
+  default     = "ubuntu-key"     # Replace with your SSH key pair name
+}
+
+############################################################################################
+#                                                                                          #
+#                                 SECURITY GROUP VARIABLES                                 #
+#                                                                                          #
+############################################################################################
+
+variable "ssh_port" {
+  description = "SSH port number"
+  type = number
+  default     = 22
+}
+
+variable "http_port" {
+  description = "HTTP port number"
+  type = number
+  default     = 80
+}
+
+variable "https_port" {
+  description = "HTTPS port number"
+  type = number
+  default     = 443
+}
+
+variable "custom_port" {
+  description = "Custom port number"
+  type = number
+  default     = 4000
+}
