@@ -162,6 +162,12 @@ variable "rds_sg_name" {
   default    = "rds-sg"
 }
 
+variable "load_balancer_sg_name" {
+  description = "Load Balancer security group name"
+  type = string
+  default    = "load-balancer-sg"
+}
+
 variable "private_sg_tag" {
   description = "Tags to apply to the private security group"
   type        = map(string)
@@ -183,6 +189,14 @@ variable "rds_sg_tag" {
   type        = map(string)
   default = {
     Name = "rds-sg"
+  }
+}
+
+variable "load_balancer_sg_tag" {
+  description = "Tags to apply to the Load Balancer security group"
+  type        = map(string)
+  default = {
+    Name = "lb-sg"
   }
 }
 

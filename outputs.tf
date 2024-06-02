@@ -46,3 +46,17 @@ output "ec2_instances_with_private_ips" {
     instance.tags.Name => instance.private_ip
   }
 }
+
+output "frontend_attachment_info" {
+  value = {
+    instance_id = aws_lb_target_group_attachment.frontend_attachment.target_id
+    arn         = aws_lb_target_group_attachment.frontend_attachment.id
+  }
+}
+
+output "backend_attachment_info" {
+  value = {
+    instance_id = aws_lb_target_group_attachment.backend_attachment.target_id
+    arn         = aws_lb_target_group_attachment.backend_attachment.id
+  }
+}

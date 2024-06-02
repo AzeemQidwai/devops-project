@@ -70,3 +70,27 @@ resource "aws_instance" "ec2_instance_private" {
     Name = var.ec2_instance_names[count.index]
   }
 }
+
+data "aws_instances" "frontend_instances" {
+    depends_on = [ aws_instance.ec2_instance_private ]
+  filter {
+    name   = "tag:Name"
+    values = ["frontend"]
+  }
+  filter {
+    name   = "instance-state-name"
+    values = ["running"]
+  }
+}
+
+data "aws_instances" "backend_instances" {
+    depends_on = [ aws_instance.ec2_instance_private ]
+  filter {
+    name   = "tag:Name"
+    values = ["backend"]
+  }
+  filter {
+    name   = "instance-state-name"
+    values = ["running"]
+  }
+}
