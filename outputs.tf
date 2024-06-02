@@ -39,3 +39,10 @@ output "my_bastion_public_ip" {
 output "mysql_db_endpoint" {
   value = aws_db_instance.mysql_db.endpoint
 }
+
+output "ec2_instances_with_private_ips" {
+  value = {
+    for instance in aws_instance.ec2_instance_private :
+    instance.tags.Name => instance.private_ip
+  }
+}

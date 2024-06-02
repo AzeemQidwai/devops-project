@@ -75,11 +75,14 @@ resource "aws_route_table_association" "private_rta" {
   route_table_id = aws_route_table.private_rt.id
 }
 
-resource "aws_db_subnet_group" "main" {
-  name       = "main-subnet-group"
+resource "aws_db_subnet_group" "db_subnet_group" {
+  name = "my-db-subnet-group"
   subnet_ids = [for subnet in aws_subnet.private_subnet : subnet.id]
+  
+  tags = var.db_subnet_group_tag
+}
 
-  tags = {
-    Name = "Main DB Subnet Group"
-  }
+resource "random_shuffle" "public_subnet_shuffle" {
+  input        = aws_subnet.public_subnet[*].id
+  result_count = 1
 }

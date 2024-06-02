@@ -1,5 +1,5 @@
 resource "aws_security_group" "public_sg" {
-  name        = "public-sg"
+  name        = var.public_sg_name
   description = "Security group for EC2 instance with public IP"
   depends_on = [aws_vpc.main]
   vpc_id      = aws_vpc.main.id
@@ -17,10 +17,12 @@ resource "aws_security_group" "public_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = var.public_sg_tag
 }
 
 resource "aws_security_group" "private_sg" {
-  name        = "private-sg"
+  name        = var.private_sg_name
   description = "Security group for EC2 instances without public IP"
   depends_on = [aws_vpc.main]
   vpc_id      = aws_vpc.main.id
@@ -59,11 +61,13 @@ ingress {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = var.private_sg_tag
 }
 
 
 resource "aws_security_group" "rds_sg" {
-  name        = "rds-sg"
+  name        = var.rds_sg_name
   description = "Allow SSH and MySQL traffic"
   depends_on  = [aws_vpc.main]
   vpc_id      = aws_vpc.main.id
@@ -89,7 +93,5 @@ resource "aws_security_group" "rds_sg" {
     cidr_blocks = ["0.0.0.0/0"] # allow traffic to any IP address
   }
 
-  tags = {
-    Name = "rds_sg"
-  }
+  tags = var.rds_sg_tag
 }

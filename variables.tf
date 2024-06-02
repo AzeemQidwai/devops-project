@@ -89,6 +89,12 @@ variable "private_route_table_tags" {
 #                                                                                          #
 ############################################################################################
 
+variable "user" {
+  description = "Names of EC2 instances user"
+  type        = string
+  default     = "ubuntu"
+}
+
 variable "ec2_instance_names" {
   description = "Names of EC2 instances"
   type        = list(string)
@@ -119,11 +125,67 @@ variable "key_name" {
   default     = "ubuntu-key"     # Replace with your SSH key pair name
 }
 
+variable "local_file_path" {
+  description = "Local file to copy"
+  type        = string
+  default     = "ubuntu-key.pem"  # replace with your local file path
+}
+
+variable "remote_file_path" {
+  description = "Remote file path on the instance"
+  type        = string
+  default     = "/home/ubuntu/ubuntu-key.pem"  # replace with your desired remote file path
+}
+
+
 ############################################################################################
 #                                                                                          #
 #                                 SECURITY GROUP VARIABLES                                 #
 #                                                                                          #
 ############################################################################################
+
+variable "private_sg_name" {
+  description = "Private security group name"
+  type = string
+  default    = "private-sg"
+}
+
+variable "public_sg_name" {
+  description = "Public security group name"
+  type = string
+  default    = "public-sg"
+}
+
+variable "rds_sg_name" {
+  description = "DB security group name"
+  type = string
+  default    = "rds-sg"
+}
+
+variable "private_sg_tag" {
+  description = "Tags to apply to the private security group"
+  type        = map(string)
+  default = {
+    Name = "private-sg"
+  }
+}
+
+variable "public_sg_tag" {
+  description = "Tags to apply to the public security group"
+  type        = map(string)
+  default = {
+    Name = "public-sg"
+  }
+}
+
+variable "rds_sg_tag" {
+  description = "Tags to apply to the RDS security group"
+  type        = map(string)
+  default = {
+    Name = "rds-sg"
+  }
+}
+
 
 variable "ssh_port" {
   description = "SSH port number"
@@ -221,4 +283,12 @@ variable "skip_final_snapshot" {
   description = "Whether to skip the final snapshot before deletion"
   type        = bool
   default     = true
+}
+
+variable "db_subnet_group_tag" {
+  description = "Tags to apply to the db subnet group"
+  type        = map(string)
+  default = {
+    Name = "Main DB Subnet Group"
+  }
 }
