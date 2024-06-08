@@ -23,7 +23,7 @@ resource "aws_security_group" "public_sg" {
 
 resource "aws_security_group" "private_sg" {
   depends_on = [aws_vpc.main]
-  name        = "private_sg_name"
+  name        = var.private_sg_name
   description = "Allow traffic from the load balancer"
   vpc_id      = aws_vpc.main.id
 

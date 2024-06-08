@@ -76,3 +76,15 @@ data "aws_instances" "backend_instances" {
     values = ["running"]
   }
 }
+
+data "aws_instances" "metabase_instances" {
+    depends_on = [ aws_instance.ec2_instance_private ]
+  filter {
+    name   = "tag:Name"
+    values = ["metabase"]
+  }
+  filter {
+    name   = "instance-state-name"
+    values = ["running"]
+  }
+}

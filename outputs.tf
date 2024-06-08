@@ -65,3 +65,11 @@ output "load_balancer_dns" {
   description = "The DNS name of the load balancer"
   value       = aws_lb.app_lb.dns_name
 }
+
+output "dns_names" {
+  value = {
+    frontend = aws_route53_record.frontend.fqdn
+    backend  = aws_route53_record.backend.fqdn
+    metabase = aws_route53_record.metabase.fqdn
+  }
+}

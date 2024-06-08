@@ -232,6 +232,12 @@ variable "mysql_port" {
   default     = 3306
 }
 
+variable "metabase_port" {
+  description = "Metabase port number"
+  type = number
+  default     = 3000
+}
+
 
 ############################################################################################
 #                                                                                          #
@@ -309,15 +315,93 @@ variable "db_subnet_group_tag" {
 }
 
 
+############################################################################################
+#                                                                                          #
+#                             LOAD BALANCER VARIABLES                                      #
+#                                                                                          #
+############################################################################################
 
-
-variable "github_token" {
-  description = "The GitHub token with repo access"
+variable "lb_name" {
+  description = "The name of the load balancer"
   type        = string
-  sensitive   = true
+  default     = "my-load-balancer"
 }
 
-variable "repository" {
-  description = "The name of the GitHub repository"
+variable "lb_tag" {
+  description = "Tags to apply to the load balancer"
+  type        = map(string)
+  default = {
+    Name = "my-load-balancer"
+  }
+}
+variable "frontend_target_group_name" {
+  description = "The name of the frontend target group"
   type        = string
+  default     = "frontend-tg"
+}
+
+variable "frontend_target_group_tag" {
+  description = "Tags to apply to the frontend target group"
+  type        = map(string)
+  default = {
+    Name = "frontend-tg"
+  }
+}
+
+variable "backend_target_group_name" {
+  description = "The name of the backend target group"
+  type        = string
+  default     = "backend-tg"
+}
+
+variable "backend_target_group_tag" {
+  description = "Tags to apply to the backend target group"
+  type        = map(string)
+  default = {
+    Name = "backend-tg"
+  }
+}
+
+variable "metabase_target_group_name" {
+  description = "The name of the metabase target group"
+  type        = string
+  default     = "metabase-tg"
+}
+
+variable "metabase_target_group_tag" {
+  description = "Tags to apply to the metabase target group"
+  type        = map(string)
+  default = {
+    Name = "metabase-tg"
+  }
+}
+
+############################################################################################
+#                                                                                          #
+#                                 DOMAIN VARIABLES                                         #
+#                                                                                          #
+############################################################################################
+
+
+variable "domain_name" {
+  description = "The domain name to use"
+  type        = string
+}
+
+variable "frontend_dns" {
+  description = "The DNS name for the frontend"
+  type        = string
+  default     = "frontend"
+}
+
+variable "backend_dns" {
+  description = "The DNS name for the backend"
+  type        = string
+  default     = "backend"
+}
+
+variable "metabase_dns" {
+  description = "The DNS name for the metabase"
+  type        = string
+  default     = "metabase"
 }
