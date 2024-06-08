@@ -11,5 +11,5 @@ resource "aws_db_instance" "mysql_db" {
   skip_final_snapshot  = var.skip_final_snapshot
   db_subnet_group_name = aws_db_subnet_group.db_subnet_group.name
   depends_on = [ aws_security_group.rds_sg ]
-  vpc_security_group_ids = [aws_security_group.rds_sg.id] # reference the security group
+  vpc_security_group_ids = [aws_security_group.rds_sg.id]
 }

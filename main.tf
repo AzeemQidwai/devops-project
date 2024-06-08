@@ -4,24 +4,6 @@ resource "aws_vpc" "main" {
   tags = var.tags
 }
 
-resource "aws_subnet" "public_subnet" {
-  count = length(var.public_subnet_cidrs)
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = var.public_subnet_cidrs[count.index]
-  availability_zone = var.availability_zones[count.index]
-
-  tags = merge(var.subnet_tags, { Name = "${var.subnet_tags.Name}-public-${var.availability_zones[count.index]}" })
-}
-
-resource "aws_subnet" "private_subnet" {
-  count = length(var.private_subnet_cidrs)
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = var.private_subnet_cidrs[count.index]
-  availability_zone = var.availability_zones[count.index]
-
-  tags = merge(var.subnet_tags, { Name = "${var.subnet_tags.Name}-private-${var.availability_zones[count.index]}" })
-}
-
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main.id
 
@@ -37,11 +19,30 @@ resource "aws_nat_gateway" "nat" {
 
 resource "aws_eip" "nat" {
   domain = "vpc"
-
-  tags = var.nat_gw_tags
 }
 
-resource "aws_route_table" "public_rt" {
+resource "aws_subnet" "public_subnet" {
+  count = 3
+
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = var.public_subnet_cidrs[count.index]
+  map_public_ip_on_launch = true
+  availability_zone = element(data.aws_availability_zones.available.names, count.index)
+
+  tags = merge(var.subnet_tags, { Name = "${var.subnet_tags.Name}-public-${data.aws_availability_zones.available.names[count.index]}" })
+}
+
+resource "aws_subnet" "private_subnet" {
+  count = 3
+
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = var.private_subnet_cidrs[count.index]
+  availability_zone = element(data.aws_availability_zones.available.names, count.index)
+
+  tags = merge(var.subnet_tags, { Name = "${var.subnet_tags.Name}-private-${data.aws_availability_zones.available.names[count.index]}" })
+}
+
+resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
 
   route {
@@ -52,27 +53,27 @@ resource "aws_route_table" "public_rt" {
   tags = var.public_route_table_tags
 }
 
-resource "aws_route_table" "private_rt" {
+resource "aws_route_table" "private" {
   vpc_id = aws_vpc.main.id
 
   route {
     cidr_block = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.nat.id
+    gateway_id = aws_nat_gateway.nat.id
   }
 
   tags = var.private_route_table_tags
 }
 
-resource "aws_route_table_association" "public_rta" {
-  count          = length(var.public_subnet_cidrs)
-  subnet_id      = aws_subnet.public_subnet[count.index].id
-  route_table_id = aws_route_table.public_rt.id
+resource "aws_route_table_association" "public" {
+  count          = length(aws_subnet.public_subnet)
+  subnet_id      = element(aws_subnet.public_subnet.*.id, count.index)
+  route_table_id = aws_route_table.public.id
 }
 
-resource "aws_route_table_association" "private_rta" {
-  count          = length(var.private_subnet_cidrs)
-  subnet_id      = aws_subnet.private_subnet[count.index].id
-  route_table_id = aws_route_table.private_rt.id
+resource "aws_route_table_association" "private" {
+  count          = length(aws_subnet.private_subnet)
+  subnet_id      = element(aws_subnet.private_subnet.*.id, count.index)
+  route_table_id = aws_route_table.private.id
 }
 
 resource "aws_db_subnet_group" "db_subnet_group" {
@@ -82,7 +83,8 @@ resource "aws_db_subnet_group" "db_subnet_group" {
   tags = var.db_subnet_group_tag
 }
 
-resource "random_shuffle" "public_subnet_shuffle" {
-  input        = aws_subnet.public_subnet[*].id
-  result_count = 1
+data "aws_availability_zones" "available" {
+  state = "available"
 }
+
+

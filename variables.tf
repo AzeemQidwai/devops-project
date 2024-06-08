@@ -1,3 +1,4 @@
+
 # variables.tf
 
 ############################################################################################
@@ -305,4 +306,18 @@ variable "db_subnet_group_tag" {
   default = {
     Name = "Main DB Subnet Group"
   }
+}
+
+
+
+
+variable "github_token" {
+  description = "The GitHub token with repo access"
+  type        = string
+  sensitive   = true
+}
+
+variable "repository" {
+  description = "The name of the GitHub repository"
+  type        = string
 }

@@ -25,15 +25,15 @@ output "nat_gateway_eip" {
 }
 
 output "public_route_table_id" {
-  value = aws_route_table.public_rt.id
+  value = aws_route_table.public.id
 }
 
 output "private_route_table_id" {
-  value = aws_route_table.private_rt.id
+  value = aws_route_table.private.id
 }
 
 output "my_bastion_public_ip" {
-  value = aws_instance.my-bastion.public_ip
+  value = aws_instance.ec2_instance_public.public_ip
 }
 
 output "mysql_db_endpoint" {
@@ -59,4 +59,9 @@ output "backend_attachment_info" {
     instance_id = aws_lb_target_group_attachment.backend_attachment.target_id
     arn         = aws_lb_target_group_attachment.backend_attachment.id
   }
+}
+
+output "load_balancer_dns" {
+  description = "The DNS name of the load balancer"
+  value       = aws_lb.app_lb.dns_name
 }

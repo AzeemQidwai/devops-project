@@ -1,12 +1,12 @@
 resource "aws_security_group" "public_sg" {
-  name        = var.public_sg_name
-  description = "Security group for EC2 instance with public IP"
   depends_on = [aws_vpc.main]
+  name        = var.public_sg_name
+  description = "Allow SSH inbound traffic"
   vpc_id      = aws_vpc.main.id
 
   ingress {
-    from_port   = 0
-    to_port     = 65535
+    from_port   = var.ssh_port
+    to_port     = var.ssh_port
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -22,18 +22,18 @@ resource "aws_security_group" "public_sg" {
 }
 
 resource "aws_security_group" "private_sg" {
-  name        = var.private_sg_name
-  description = "Security group for EC2 instances without public IP"
   depends_on = [aws_vpc.main]
+  name        = "private_sg_name"
+  description = "Allow traffic from the load balancer"
   vpc_id      = aws_vpc.main.id
 
-ingress {
-    from_port   = var.ssh_port
-    to_port     = var.ssh_port
+  ingress {
+    from_port   = var.https_port
+    to_port     = var.https_port
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
+  
   ingress {
     from_port   = var.http_port
     to_port     = var.http_port
@@ -42,15 +42,8 @@ ingress {
   }
 
   ingress {
-    from_port   = var.https_port
-    to_port     = var.https_port
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = var.custom_port
-    to_port     = var.custom_port
+    from_port   = var.ssh_port
+    to_port     = var.ssh_port
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -64,7 +57,6 @@ ingress {
 
   tags = var.private_sg_tag
 }
-
 
 resource "aws_security_group" "rds_sg" {
   name        = var.rds_sg_name
@@ -96,11 +88,10 @@ resource "aws_security_group" "rds_sg" {
   tags = var.rds_sg_tag
 }
 
-
-resource "aws_security_group" "load_balancer_sg" {
-  name        = var.load_balancer_sg_name
-  description = "Allow HTTP and HTTPS traffic"
+resource "aws_security_group" "lb_sg" {
   depends_on = [aws_vpc.main]
+  name        = var.load_balancer_sg_name
+  description = "Allow HTTP and HTTPS inbound traffic"
   vpc_id      = aws_vpc.main.id
 
   ingress {
